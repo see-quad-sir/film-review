@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="utf-8">
+    <title>Film Review</title>
+  </head>
+  <header>
+    <h1>Film Review</h1>
+  </header>
+  <body>
+    <form action="{% url 'FilmReviewApp:user' %}" method="post">
+      {% csrf_token %}
+      <input type="text" name="username">
+      <input type="password" name="password">
+      <input type="submit" name="login" value="Login">
+      <input type="submit" name="signup" value="Sign Up">
+    </form>
+  </body>
+</html>
