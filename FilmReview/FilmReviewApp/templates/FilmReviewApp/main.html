@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <title>Film Review</title>
+  </head>
+  <header>
+    <h1>Film Review</h1>
+    {% if user %}
+    <p>Welcome {{ user.user_name }} !</p>
+    <form action="{% url 'FilmReviewApp:logout' %}" method="post">
+      {% csrf_token %}
+      <input type="submit" name="logout" value="Logout">
+    {% endif %}
+  </header>
+  <body>
+    {% for movie in movie_list %}
+    <a href="{% url 'FilmReviewApp:movie' movie.id user.id %}">{{ movie.title }} rating: {{ movie.star_rating_avg }}</a>
+    <br>
+    {% endfor %}
+  </body>
+</html>

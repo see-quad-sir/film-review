@@ -14,7 +14,7 @@ class Movie(models.Model):
 
 
 class Review(models.Model):
-    movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     review = models.TextField()
     star_rating = models.IntegerField()
