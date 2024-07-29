@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import Movie, User
+from .models import Movie, Review, User
 
 
 # Create your views here.
@@ -37,5 +37,6 @@ def logout(request):
 
 def movie(request, movie_id):
     movie = Movie.objects.get(pk=movie_id)
-    context = {"movie": movie}
+    reviews = Review.objects.filter(movie_id=movie_id)
+    context = {"movie": movie, "reviews": reviews}
     return render(request, "FilmReviewApp/movie.html", context)
