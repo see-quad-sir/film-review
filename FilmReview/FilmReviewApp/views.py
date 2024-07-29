@@ -35,8 +35,27 @@ def logout(request):
     return HttpResponseRedirect(reverse("FilmReviewApp:index"))
 
 
-def movie(request, movie_id):
+def movie(request, movie_id, user_id):
     movie = Movie.objects.get(pk=movie_id)
     reviews = Review.objects.filter(movie_id=movie_id)
-    context = {"movie": movie, "reviews": reviews}
+    context = {"movie": movie, "reviews": reviews, "user_id": user_id}
     return render(request, "FilmReviewApp/movie.html", context)
+
+
+def review(request, movie_id):
+    if request.method == "POST":
+        movie = Movie.objects.get(pk=movie_id)
+        user = User.objects.get(pk=request.POST["user_id"])
+        review = request.POST["review"]
+        star_rating = request.POST["star_rating"]
+        review = Review(
+            movie=movie,
+            user=user,
+            review=review,
+            star_rating=star_rating,
+        )
+        review.save()
+        return HttpResponseRedirect(
+            reverse("FilmReviewApp:movie", args=(movie_id, user.id))
+        )
+    return HttpResponseRedirect(reverse("FilmReviewApp:index"))

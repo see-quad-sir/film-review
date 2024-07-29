@@ -15,7 +15,7 @@
   </header>
   <body>
     {% for movie in movie_list %}
-    <a href="{% url 'FilmReviewApp:movie' movie.id %}">{{ movie.title }} rating: {{ movie.star_rating_avg }}</a>
+    <a href="{% url 'FilmReviewApp:movie' movie.id user.id %}">{{ movie.title }} rating: {{ movie.star_rating_avg }}</a>
     <br>
     {% endfor %}
   </body>
