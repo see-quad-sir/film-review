@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
+from .forms import ReviewForm
 from .models import Movie, Review, User
 
 
@@ -38,7 +39,27 @@ def logout(request):
 def movie(request, movie_id, user_id):
     movie = Movie.objects.get(pk=movie_id)
     reviews = Review.objects.filter(movie_id=movie_id)
-    context = {"movie": movie, "reviews": reviews, "user_id": user_id}
+    if request.method == "POST":
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            if not Review.objects.filter(movie_id=movie_id, user_id=user_id).exists():
+                review = Review()
+                review.movie = movie
+                review.user = User.objects.get(pk=user_id)
+                review.review = form.cleaned_data["review"]
+                review.star_rating = form.cleaned_data["rating"]
+                num_reviews = Review.objects.filter(movie_id=movie_id).count()
+                rating_diff = review.star_rating - movie.star_rating_avg
+                movie.star_rating_avg += rating_diff / (num_reviews + 1)
+                review.save()
+                movie.save()
+            return HttpResponseRedirect(
+                reverse("FilmReviewApp:movie", args=(movie_id, user_id))
+            )
+    else:
+        form = ReviewForm()
+
+    context = {"movie": movie, "reviews": reviews, "user_id": user_id, "form": form}
     return render(request, "FilmReviewApp/movie.html", context)
 
 
@@ -54,7 +75,11 @@ def review(request, movie_id):
             review=review,
             star_rating=star_rating,
         )
+        num_reviews = Review.objects.filter(movie_id=movie_id).count()
+        rating_diff = star_rating - movie.star_rating_avg
+        movie.star_rating_avg += rating_diff / (num_reviews + 1)
         review.save()
+        movie.save()
         return HttpResponseRedirect(
             reverse("FilmReviewApp:movie", args=(movie_id, user.id))
         )
