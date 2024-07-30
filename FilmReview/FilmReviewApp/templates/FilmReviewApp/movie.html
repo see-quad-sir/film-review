@@ -2,8 +2,12 @@
 <html lang="en-US">
   <head>
     <meta charset="utf-8">
-    <title>Film Review</title>
+    <title>Film Review: {{ movie.title }}</title>
   </head>
+  <header>
+    <a href="{% url 'FilmReviewApp:user' %}" method="post">Back to Main</a>
+    <h1>Film Review</h1>
+  </header>
   <body>
     <h1>{{ movie.title }}</h1>
     <img src="{{ MEDIA_URL }}{{ movie.poster }}" width="300">
@@ -13,8 +17,12 @@
       <input type="submit" value="Submit Review">
     </form>
     <h2>Reviews</h2>
+    {% if reviews %}
     {% for review in reviews %}
-    <p>{{ review.review }} rating: {{ review.star_rating }}</p>
+    <p>{{ review.user.user_name }}: {{ review.review }} / rating: {{ review.star_rating }}</p>
     {% endfor %}
+    {% else %}
+    <p>No reviews yet</p>
+    {% endif %}
   </body>
 </html>
