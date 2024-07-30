@@ -6,7 +6,7 @@
   </head>
   <body>
     <h1>{{ movie.title }}</h1>
-    <img src="{{ movie.poster }}" alt="{{ movie.title }}">
+    <img src="{{ MEDIA_URL }}{{ movie.poster }}" width="300">
     <form action="{% url 'FilmReviewApp:review' movie.id %}" method="post">
       {% csrf_token %}
       <label for="review">Review:</label>
